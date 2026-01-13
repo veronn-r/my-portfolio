@@ -7,15 +7,22 @@ const DATA = {
   role: "Designer",
   location: "Mumbai, India",
   email: "veron.rebello@gmail.com",
+  // Note: Headline and Bio are removed from the display, 
+  // but I'm keeping the data here just in case you need it later.
   headline: "Visual Systems & Narrative Design.", 
   bio: "I am a multidisciplinary designer, editor, and illustrator bridging the gap between analytical precision and creative expression. Leveraging a unique foundation in STEM, I apply a scientific rigor to visual problem solving—producing work that is not just aesthetically engaging, but systematically sound.",
-  skills: [
-    "Adobe Creative Suite",
-    "Affinity Suite",
-    "DaVinci Resolve (Motion)",
-    "Print Production",
-    "Systems-Based Workflow"
+  
+  // Pointing to local static images in 'public/icons'
+  tools: [
+    { name: "Photoshop", url: "/icons/ps.svg" },
+    { name: "Illustrator", url: "/icons/ai.svg" },
+    { name: "InDesign", url: "/icons/id.svg" },
+    { name: "After Effects", url: "/icons/ae.svg" },
+    { name: "Premiere Pro", url: "/icons/pr.svg" },
+    { name: "DaVinci Resolve", url: "/icons/dr.svg" },
+    { name: "Affinity by Canva", url: "/icons/af.svg" },
   ],
+
   sections: {
     professional: [
       {
@@ -67,61 +74,56 @@ export default function Home() {
     <div className="min-h-screen font-sans selection:bg-stone-200">
       
       {/* 1. MASTHEAD */}
-      <header className="border-b-4 border-stone-900 pt-12 pb-4 px-6 md:px-12 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-end gap-4">
+      <header className="border-b-4 border-stone-900 pt-16 pb-12 px-6 md:px-12 max-w-6xl mx-auto flex flex-col items-center text-center gap-6">
         <div>
-          <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-stone-900 leading-[0.9]">
+          <h1 className="font-serif text-5xl md:text-8xl font-bold tracking-tight text-stone-900 leading-[0.9]">
             {DATA.name}
           </h1>
-          <p className="mt-2 text-stone-500 font-medium tracking-widest uppercase text-sm">
-            {DATA.role}
-          </p>
+          <div className="mt-4 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-stone-500 font-medium tracking-widest uppercase text-sm">
+            <span>{DATA.role}</span>
+            <span className="hidden md:inline">•</span>
+            <span>{DATA.location}</span>
+          </div>
         </div>
-        <div className="text-right flex flex-col items-end">
-           <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-2 py-1 mb-2 inline-block">
+
+        {/* UPDATED: Buttons Side-by-Side */}
+        <div className="flex flex-row items-center gap-4 mt-2">
+           <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-4 py-3 inline-block cursor-default">
               Open to Work
            </span>
-           <p className="text-sm text-stone-500">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} • {DATA.location}</p>
+           <a 
+             href={`mailto:${DATA.email}`}
+             className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-4 py-3 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
+           >
+             Contact Me
+           </a>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 md:px-12">
         
-        {/* 2. HERO */}
-        <section className="py-16 md:py-24 grid grid-cols-1 md:grid-cols-12 gap-12 border-b border-stone-300">
-          <div className="md:col-span-8">
-            <h2 className="font-serif text-4xl md:text-6xl italic leading-tight mb-8 text-stone-800">
-              {DATA.headline}
-            </h2>
-            <div className="prose prose-stone text-lg md:text-xl leading-relaxed text-stone-700 max-w-2xl">
-              <p>{DATA.bio}</p>
-            </div>
+        {/* 2. HERO / COMPETENCIES (Redesigned) */}
+        {/* Text removed. Now just the Competencies row. */}
+        <section className="py-8 md:py-8 border-b border-stone-300">
+            <h3 className="font-serif text-4xl mb-10 text-center">
+              Competencies
+            </h3>
             
-            <div className="mt-10 flex gap-4">
-              <a 
-                href={`mailto:${DATA.email}`}
-                className="group flex items-center gap-2 px-5 py-3 bg-stone-900 text-stone-50 rounded-sm hover:bg-stone-700 transition-colors"
-              >
-                <Mail size={18} />
-                <span>Contact Me</span>
-              </a>
-              <button className="flex items-center gap-2 px-5 py-3 border border-stone-300 hover:border-stone-900 transition-colors">
-                <Download size={18} />
-                <span>Resume</span>
-              </button>
-            </div>
-          </div>
-
-          <aside className="md:col-span-4 md:border-l md:border-stone-200 md:pl-12 pt-2">
-            <h3 className="font-serif text-2xl mb-6 border-b border-stone-300 pb-2">Competencies</h3>
-            <ul className="space-y-3">
-              {DATA.skills.map((skill, index) => (
-                <li key={index} className="flex items-start gap-2 text-stone-600">
-                  <span className="text-stone-400 mt-1">●</span>
-                  <span className="font-medium">{skill}</span>
-                </li>
+            {/* Horizontal Row of Icons */}
+            <div className="flex flex-wrap justify-center items-end gap-8 md:gap-16">
+              {DATA.tools.map((tool, index) => (
+                <div key={index} className="flex flex-col items-center justify-center transition-transform duration-300 group hover:-translate-y-2">
+                   <img 
+                     src={tool.url} 
+                     alt={tool.name} 
+                     className="w-10 h-10 md:w-14 md:h-14 object-contain mb-4 opacity-80 group-hover:opacity-100 transition-opacity"
+                   />
+                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 group-hover:text-stone-900 text-center">
+                      {tool.name}
+                   </span>
+                </div>
               ))}
-            </ul>
-          </aside>
+            </div>
         </section>
 
         {/* 3. WORK SECTIONS */}
@@ -145,6 +147,8 @@ export default function Home() {
     </div>
   );
 }
+
+// --- HELPER COMPONENTS ---
 
 function CategorySection({ title, items, isLast = false }) {
   return (

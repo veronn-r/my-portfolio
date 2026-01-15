@@ -167,7 +167,7 @@ export default function Home() {
                   ${isScrolled ? 'text-2xl md:text-3xl' : 'text-4xl md:text-8xl'}`}>
                  {isScrolled ? (
                     <>
-                      <span className="md:hidden">Veron Vincent Rebello</span>
+                      <span className="md:hidden">Veron Rebello</span>
                       <span className="hidden md:inline">{DATA.name}</span>
                     </>
                  ) : (

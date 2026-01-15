@@ -18,7 +18,7 @@ const DATA = {
     { name: "After Effects", url: "/icons/ae.svg" },
     { name: "Premiere Pro", url: "/icons/pr.svg" },
     { name: "DaVinci Resolve", url: "/icons/dr.svg" },
-    { name: "Affinity Suite", url: "/icons/af.svg" },
+    { name: "Affinity by Canva", url: "/icons/af.svg" },
   ],
 
   // 1. PROFESSIONAL WORK DATA

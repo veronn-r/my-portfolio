@@ -122,7 +122,7 @@ export default function Home() {
   const getNextIndex = () => (currentSlide + 1) % DATA.professional.length;
 
   return (
-    <div className="min-h-screen font-sans selection:bg-stone-200">
+    <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden">
       
       {/* 1. FIXED HEADER */}
       <header 
@@ -130,22 +130,32 @@ export default function Home() {
           ${isScrolled ? 'h-20 shadow-md' : 'h-[320px] md:h-[300px]'}`}
       >
         <div className="max-w-6xl mx-auto px-6 md:px-12 h-full flex items-center justify-between relative">
-            <div className={`transition-all duration-700 ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
+            
+            {/* LEFT: OPEN TO WORK (Hidden on Mobile Scroll to save space) */}
+            <div className={`transition-all duration-700 hidden md:block ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
                <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-3 py-2 inline-block cursor-default bg-white">
                   Open to Work
                </span>
             </div>
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center w-full">
-               <h1 className={`font-serif font-bold tracking-tight text-stone-900 leading-[0.9] transition-all duration-500
-                  ${isScrolled ? 'text-3xl' : 'text-5xl md:text-8xl'}`}>
+
+            {/* CENTER: NAME & ROLE */}
+            <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center w-full transition-all duration-500
+               ${isScrolled ? 'w-auto md:w-full' : 'w-full'}`}>
+               
+               {/* NAME: Smaller Mobile Text (4xl initial -> xl scrolled) */}
+               <h1 className={`font-serif font-bold tracking-tight text-stone-900 leading-[0.9] transition-all duration-500 whitespace-nowrap
+                  ${isScrolled ? 'text-xl md:text-3xl' : 'text-4xl md:text-8xl'}`}>
                  {DATA.name}
                </h1>
+
                <div className={`text-stone-500 font-medium tracking-widest uppercase mt-4 text-sm flex gap-2 md:gap-4 transition-all duration-300
                   ${isScrolled ? 'opacity-0 h-0 overflow-hidden mt-0' : 'opacity-100'}`}>
                  <span>{DATA.role}</span>
                  <span className="hidden md:inline">•</span>
                  <span>{DATA.location}</span>
                </div>
+               
+               {/* INITIAL BUTTONS */}
                <div className={`flex gap-4 mt-6 transition-all duration-300
                   ${isScrolled ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
                    <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-4 py-3 inline-block cursor-default">
@@ -156,6 +166,8 @@ export default function Home() {
                    </a>
                </div>
             </div>
+
+            {/* RIGHT: CONTACT ME */}
             <div className={`transition-all duration-700 ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
                <a href={`mailto:${DATA.email}`} className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-3 py-2 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors">
                  Contact Me
@@ -171,11 +183,11 @@ export default function Home() {
         {/* 2. COMPETENCIES */}
         <section className="py-12 md:py-16 border-b border-stone-300">
             <h3 className="font-serif text-4xl mb-10 text-center">Competencies</h3>
-            <div className="flex flex-nowrap justify-center items-end gap-4 md:gap-16 overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
+            <div className="flex flex-nowrap justify-start md:justify-center items-end gap-6 md:gap-16 overflow-x-auto pb-4 md:pb-0 scrollbar-hide w-full">
               {DATA.tools.map((tool, index) => (
                 <div key={index} className="flex flex-col items-center justify-center shrink-0 group">
-                   <img src={tool.url} alt={tool.name} className="w-8 h-8 md:w-14 md:h-14 object-contain mb-4 opacity-80 group-hover:opacity-100 transition-opacity duration-300"/>
-                   <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-stone-400 group-hover:text-stone-900 text-center transition-colors duration-300">
+                   <img src={tool.url} alt={tool.name} className="w-10 h-10 md:w-14 md:h-14 object-contain mb-4 opacity-80 group-hover:opacity-100 transition-opacity duration-300"/>
+                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 group-hover:text-stone-900 text-center transition-colors duration-300">
                       {tool.name}
                    </span>
                 </div>

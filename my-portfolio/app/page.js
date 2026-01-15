@@ -10,6 +10,12 @@ const DATA = {
   location: "Mumbai, India",
   email: "veron.rebello@gmail.com",
   
+  // --- CONTACT LINKS (UPDATE THESE) ---
+  contact: {
+    linkedin: "https://www.linkedin.com/in/your-profile", // <--- PASTE YOUR LINKEDIN URL HERE
+    whatsapp: "https://wa.me/9322024447", // <--- PASTE YOUR WHATSAPP LINK HERE
+  },
+
   // Tools Data
   tools: [
     { name: "Photoshop", url: "/icons/ps.svg" },
@@ -81,7 +87,7 @@ const DATA = {
     // YouTube Section
     video: {
       id: "g5DKiuWa-1M", 
-      desc: "For the 2022 edition of IMPRINT, I animated this short trailer for the magazines call for articles announcement"
+      desc: "For IMPRINT 2022, I created an animated short trailer to announce the magazine’s call for articles."
     }
   },
 
@@ -104,24 +110,52 @@ export default function Home() {
   const [currentXzaSlide, setCurrentXzaSlide] = useState(0); // Extra-Curricular Carousel
   const [isScrolled, setIsScrolled] = useState(false);
   
-  // LIGHTBOX STATE
-  const [selectedProject, setSelectedProject] = useState(null);
+  // MODAL STATES
+  const [selectedProject, setSelectedProject] = useState(null); // Lightbox
+  const [isContactOpen, setIsContactOpen] = useState(false);    // Contact Modal
 
-  // 1. PROFESSIONAL CAROUSEL TIMER
+  // PAUSE STATES
+  const [isPaused, setIsPaused] = useState(false);
+  const [isXzaPaused, setIsXzaPaused] = useState(false);
+
+  // SWIPE GESTURE STATE
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50; // Required distance for a swipe to register
+
+  // SWIPE HANDLERS
+  const onTouchStart = (e) => {
+    setTouchEnd(null); 
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = (nextFunc, prevFunc) => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) nextFunc();
+    if (isRightSwipe) prevFunc();
+  };
+
+  // 1. PROFESSIONAL CAROUSEL TIMER (With Pause Check)
   useEffect(() => {
+    if (isPaused) return; 
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % DATA.professional.length);
     }, 3000); 
     return () => clearInterval(timer);
-  }, [currentSlide]);
+  }, [currentSlide, isPaused]);
 
-  // 2. XZA CAROUSEL TIMER
+  // 2. XZA CAROUSEL TIMER (With Pause Check)
   useEffect(() => {
+    if (isXzaPaused) return; 
     const timer = setInterval(() => {
       setCurrentXzaSlide((prev) => (prev + 1) % DATA.xza.slides.length);
     }, 3000); 
     return () => clearInterval(timer);
-  }, [currentXzaSlide]);
+  }, [currentXzaSlide, isXzaPaused]);
 
   // 3. SCROLL DETECTION
   useEffect(() => {
@@ -149,12 +183,8 @@ export default function Home() {
       >
         <div className="max-w-6xl mx-auto px-6 md:px-12 h-full flex items-center justify-between relative">
             
-            {/* LEFT SIDE: "Open to Work" */}
-            <div className={`transition-all duration-700 hidden md:block ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
-               <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-3 py-2 inline-block cursor-default bg-white">
-                  Open to Work
-               </span>
-            </div>
+            {/* LEFT SIDE: Empty Placeholder */}
+            <div className="hidden md:block pointer-events-none"></div>
 
             {/* CENTER/LEFT: THE NAME CONTAINER */}
             <div className={`absolute top-1/2 -translate-y-1/2 flex flex-col transition-all duration-500
@@ -182,23 +212,27 @@ export default function Home() {
                  <span>{DATA.location}</span>
                </div>
                
+               {/* INITIAL BUTTONS (Trigger Modal) */}
                <div className={`flex gap-4 mt-6 transition-all duration-300
                   ${isScrolled ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
-                   <span className="text-xs font-bold tracking-widest uppercase border border-stone-900 px-4 py-3 inline-block cursor-default">
-                      Open to Work
-                   </span>
-                   <a href={`mailto:${DATA.email}`} className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-4 py-3 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors">
+                   <button 
+                     onClick={() => setIsContactOpen(true)}
+                     className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-4 py-3 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
+                   >
                      Contact Me
-                   </a>
+                   </button>
                </div>
             </div>
 
-            {/* RIGHT SIDE: Contact Button */}
+            {/* RIGHT SIDE: Contact Button (Trigger Modal) */}
             <div className={`transition-all duration-700 absolute right-6 md:right-12 top-1/2 -translate-y-1/2
                 ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
-               <a href={`mailto:${DATA.email}`} className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-3 py-2 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors">
+               <button 
+                 onClick={() => setIsContactOpen(true)}
+                 className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-3 py-2 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
+               >
                  Contact Me
-               </a>
+               </button>
             </div>
         </div>
       </header>
@@ -242,7 +276,14 @@ export default function Home() {
               </p>
           </div>
 
-          <div className="relative max-w-4xl mx-auto h-[400px] md:h-[500px] flex items-center justify-center perspective-1000">
+          <div 
+            className="relative max-w-4xl mx-auto h-[400px] md:h-[500px] flex items-center justify-center perspective-1000"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={() => onTouchEnd(nextSlide, prevSlide)}
+          >
              {DATA.professional.map((project, index) => {
                const length = DATA.professional.length;
                const isCenter = index === currentSlide;
@@ -259,7 +300,12 @@ export default function Home() {
                  <a key={index} href={project.link} target="_blank" rel="noopener noreferrer"
                     className={`absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-in-out ${positionClass}`}>
                     <div className="relative group">
-                      <img src={project.image} alt={project.title} className="h-[350px] md:h-[500px] aspect-[4/5] object-cover border border-stone-100 bg-stone-200" />
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        draggable="false" 
+                        className="h-[350px] md:h-[500px] aspect-[4/5] object-cover border border-stone-100 bg-stone-200 select-none"
+                      />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                          <span className="opacity-0 group-hover:opacity-100 bg-white px-4 py-2 text-xs font-bold uppercase tracking-widest flex gap-2 items-center shadow-sm">
                             Visit Project <ExternalLink size={12}/>
@@ -301,8 +347,14 @@ export default function Home() {
               </p>
           </div>
 
-          {/* XZA CAROUSEL */}
-          <div className="relative max-w-4xl mx-auto h-[400px] md:h-[500px] flex items-center justify-center perspective-1000 mb-20">
+          <div 
+            className="relative max-w-4xl mx-auto h-[400px] md:h-[500px] flex items-center justify-center perspective-1000 mb-20"
+            onMouseEnter={() => setIsXzaPaused(true)}
+            onMouseLeave={() => setIsXzaPaused(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={() => onTouchEnd(nextXzaSlide, prevXzaSlide)}
+          >
              {DATA.xza.slides.map((slide, index) => {
                const length = DATA.xza.slides.length;
                const isCenter = index === currentXzaSlide;
@@ -319,7 +371,12 @@ export default function Home() {
                  <a key={index} href={slide.link} target="_blank" rel="noopener noreferrer"
                  className={`absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-in-out ${positionClass}`}>
                     <div className="relative group">
-                      <img src={slide.image} alt={slide.title} className="h-[350px] md:h-[500px] aspect-[13/18] object-cover border border-stone-100 bg-stone-200" />
+                      <img 
+                        src={slide.image} 
+                        alt={slide.title} 
+                        draggable="false"
+                        className="h-[350px] md:h-[500px] aspect-[13/18] object-cover border border-stone-100 bg-stone-200 select-none"
+                      />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                          <span className="opacity-0 group-hover:opacity-100 bg-white px-4 py-2 text-xs font-bold uppercase tracking-widest flex gap-2 items-center shadow-sm">
                             Visit Project <ExternalLink size={12}/>
@@ -367,7 +424,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. PERSONAL PROJECTS - IMAGES ONLY */}
+        {/* 5. PERSONAL PROJECTS */}
         <section className="py-16">
           <h3 className="font-serif text-4xl text-stone-900 text-center mb-12">
             Personal Projects
@@ -381,16 +438,14 @@ export default function Home() {
                   className="break-inside-avoid relative group cursor-pointer"
                   onClick={() => setSelectedProject(project)}
                 >
-                  {/* Image Card */}
                   <div className="bg-stone-100 overflow-hidden border border-stone-200">
                      <img 
                        src={project.image} 
-                       alt="Personal Project" 
-                       className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                       alt="Personal Project"
+                       draggable="false"
+                       className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 select-none"
                      />
                   </div>
-                  
-                  {/* Simple Hover Overlay (No Text) */}
                   <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <div className="bg-white/90 p-3 rounded-full shadow-lg">
                          <Maximize2 size={20} className="text-stone-900"/>
@@ -416,7 +471,6 @@ export default function Home() {
            >
              <X size={32} />
            </button>
-
            <div 
              className="max-w-5xl max-h-screen w-full flex flex-col items-center"
              onClick={(e) => e.stopPropagation()} 
@@ -426,6 +480,51 @@ export default function Home() {
                 alt="Full Preview" 
                 className="max-h-[90vh] w-auto object-contain shadow-2xl"
               />
+           </div>
+        </div>
+      )}
+
+      {/* CONTACT MODAL (CUSTOM ICONS) */}
+      {isContactOpen && (
+        <div 
+          className="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
+          onClick={() => setIsContactOpen(false)}
+        >
+           <div 
+             className="bg-white p-8 md:p-12 max-w-lg w-full relative shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in duration-300"
+             onClick={(e) => e.stopPropagation()}
+           >
+              <button 
+                className="absolute top-4 right-4 text-stone-400 hover:text-stone-900 transition-colors"
+                onClick={() => setIsContactOpen(false)}
+              >
+                <X size={24} />
+              </button>
+              
+              <h3 className="font-serif text-3xl text-stone-900 mb-10">Get in Touch</h3>
+
+              <div className="grid grid-cols-3 gap-6 w-full">
+                  {/* MAIL */}
+                  <a href={`mailto:${DATA.email}`} target="_blank" rel="noopener noreferrer" 
+                     className="flex flex-col items-center gap-3 group">
+                     <img src="/icons/mail.svg" alt="Email" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>
+                     <span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">Email</span>
+                  </a>
+
+                  {/* LINKEDIN */}
+                  <a href={DATA.contact.linkedin} target="_blank" rel="noopener noreferrer"
+                     className="flex flex-col items-center gap-3 group">
+                     <img src="/icons/lin.png" alt="LinkedIn" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>
+                     <span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">LinkedIn</span>
+                  </a>
+
+                  {/* WHATSAPP */}
+                  <a href={DATA.contact.whatsapp} target="_blank" rel="noopener noreferrer"
+                     className="flex flex-col items-center gap-3 group">
+                     <img src="/icons/wa.svg" alt="WhatsApp" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>
+                     <span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">WhatsApp</span>
+                  </a>
+              </div>
            </div>
         </div>
       )}

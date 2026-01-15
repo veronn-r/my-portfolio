@@ -24,7 +24,7 @@ const DATA = {
   // 1. PROFESSIONAL WORK DATA
   svar: {
     title: "SVAR Events & Media Network",
-    role: "Designer - Magazine Layout and Editorial Design, Pre-Press Production",
+    role: "Designer - Magazine Design and Pre-Press Production; Digital Collatoral Production",
     desc: "Designed core article layouts and systems; oversaw final colour proofing and print production."
   },
   professional: [
@@ -74,7 +74,7 @@ const DATA = {
     
     // Logo Redesign Section
     logo: {
-      title: "Xavier's Zoology Association Logo Redesign",
+      title: "XZA Logo Design",
       desc: "During the Second Year of my Degree, I redesigned the logo for the Xavier's Zoology Departments student association XZA, incorporating a collage of different organisms forming the silhouette of a human hand.",
       image: "/icons/xza.svg" 
     },
@@ -234,10 +234,10 @@ export default function Home() {
               <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
                 {DATA.svar.title}
               </h4>
-              <p className="text-stone-400 text-xs md:text-sm tracking-widest mb-2 leading-relaxed px-4">
+              <p className="text-stone-400 text-xs md:text-sm mb-2 leading-relaxed px-4">
                 June 2025 - Present
               </p>
-              <p className="text-stone-500 text-xs md:text-sm tracking-widest mb-2 leading-relaxed px-4">
+              <p className="text-stone-500 text-xs md:text-sm mb-2 leading-relaxed px-4">
                 {DATA.svar.role}
               </p>
           </div>
@@ -286,10 +286,10 @@ export default function Home() {
               <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
                 {DATA.xza.title}
               </h4>
-              <p className="text-stone-400 text-xs md:text-sm tracking-widest mb-2 leading-relaxed px-4">
+              <p className="text-stone-400 text-xs md:text-sm mb-2 leading-relaxed px-4">
                 {DATA.xza.year}
               </p>
-              <div className="text-stone-500 text-xs md:text-sm tracking-widest mb-2 leading-relaxed px-4 max-w-lg mx-auto">
+              <div className="text-stone-500 text-xs md:text-sm mb-2 leading-relaxed px-4 max-w-lg mx-auto">
                 {DATA.xza.role.map((line, i) => (
                   <span key={i} className="block">
                     {line}
@@ -341,7 +341,7 @@ export default function Home() {
                 </div>
              </div>
              <div className="text-center md:text-left">
-                <h4 className="font-sans font-medium text-2xl md:text-3xl text-stone-900 mb-4">
+                <h4 className="font-sans font-bold text-1xl md:text-1xl text-stone-900 mb-4">
                   {DATA.xza.logo.title}
                 </h4>
                 <p className="text-stone-600 leading-relaxed max-w-md mx-auto md:mx-0">
@@ -361,7 +361,7 @@ export default function Home() {
                  allowFullScreen
                ></iframe>
              </div>
-             <p className="text-stone-500 font-medium text-sm">
+             <p className="text-stone-600 text-sm leading-relaxed">
                {DATA.xza.video.desc}
              </p>
           </div>

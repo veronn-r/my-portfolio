@@ -208,7 +208,7 @@ export default function Home() {
                <div className={`text-stone-500 font-medium tracking-widest uppercase mt-4 text-sm flex gap-2 md:gap-4 transition-all duration-300
                   ${isScrolled ? 'opacity-0 h-0 overflow-hidden mt-0' : 'opacity-100'}`}>
                  <span>{DATA.role}</span>
-                 <span className="hidden md:inline">•</span>
+                 <span className="">•</span>
                  <span>{DATA.location}</span>
                </div>
                

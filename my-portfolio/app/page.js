@@ -12,7 +12,7 @@ const DATA = {
   
   // --- CONTACT LINKS (UPDATE THESE) ---
   contact: {
-    linkedin: "https://www.linkedin.com/in/your-profile", // <--- PASTE YOUR LINKEDIN URL HERE
+    linkedin: "https://www.linkedin.com/in/veron-rebello-b376a7233/", // <--- PASTE YOUR LINKEDIN URL HERE
     whatsapp: "https://wa.me/9322024447", // <--- PASTE YOUR WHATSAPP LINK HERE
   },
 

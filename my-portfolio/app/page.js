@@ -3,20 +3,18 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ExternalLink, X, Maximize2 } from "lucide-react";
 
-// --- CONTENT DATA ---
+/* --- DATA & CONFIGURATION --- */
 const DATA = {
   name: "Veron Vincent Rebello",
   role: "Designer",
   location: "Mumbai, India",
   email: "veron.rebello@gmail.com",
   
-  // --- CONTACT LINKS (UPDATE THESE) ---
   contact: {
-    linkedin: "https://www.linkedin.com/in/veron-rebello-b376a7233/", // <--- PASTE YOUR LINKEDIN URL HERE
-    whatsapp: "https://wa.me/9322024447", // <--- PASTE YOUR WHATSAPP LINK HERE
+    linkedin: "https://www.linkedin.com/in/veron-rebello-b376a7233/",
+    whatsapp: "https://wa.me/9322024447",
   },
 
-  // Tools Data
   tools: [
     { name: "Photoshop", url: "/icons/ps.svg" },
     { name: "Illustrator", url: "/icons/ai.svg" },
@@ -27,7 +25,6 @@ const DATA = {
     { name: "Affinity by Canva", url: "/icons/af.svg" },
   ],
 
-  // 1. PROFESSIONAL WORK DATA
   svar: {
     title: "SVAR Events & Media Network",
     role: "Designer - Magazine Design and Pre-Press Production; Digital Collatoral Production",
@@ -61,7 +58,6 @@ const DATA = {
     },
   ],
 
-  // 2. EXTRA-CURRICULAR DATA (XZA)
   xza: {
     title: "Xavier’s Zoology Association",
     year: "2020-2023",
@@ -70,21 +66,16 @@ const DATA = {
       "Volunteer -> Design Editor -> Student Editor-in-Chief"
     ],
     desc: "I was responsible for the timely production, management and release of the Annual Departmental Magazine IMPRINT.",
-    
-    // Slides for the XZA Carousel
     slides: [
       { title: "IMPRINT Cover 2021", image: "/work/IMPRINT-21.jpg", link: "https://heyzine.com/flip-book/0a3c983ebc.html#page/1" }, 
       { title: "IMPRINT Cover 2022", image: "/work/IMPRINT-22.jpg", link: "https://heyzine.com/flip-book/b9012c8d61.html#page/1" }, 
       { title: "IMPRINT Cover 2023", image: "/work/IMPRINT-23.jpg", link: "https://heyzine.com/flip-book/b24f59b965.html#page/1" }, 
     ],
-    
-    // Logo Redesign Section
     logo: {
       title: "XZA Logo Design",
       desc: "During the Second Year of my Degree, I redesigned the logo for the Xavier's Zoology Departments student association XZA, incorporating a collage of different organisms forming the silhouette of a human hand.",
       image: "/icons/xza.svg" 
     },
-    // YouTube Section
     video: {
       id: "g5DKiuWa-1M", 
       desc: "For IMPRINT 2022, I created an animated short trailer to announce the magazine’s call for articles."
@@ -92,7 +83,6 @@ const DATA = {
   },
 
   sections: {
-    // 3. PERSONAL PROJECTS (Cleaned Data - Images Only)
     personal: [
       { image: "/work/Chrysilla-volupe.jpg" },
       { image: "/work/maow-ellise.jpg" }, 
@@ -105,88 +95,78 @@ const DATA = {
 };
 
 export default function Home() {
-  // --- STATE MANAGEMENT ---
-  const [currentSlide, setCurrentSlide] = useState(0);       // Professional Carousel
-  const [currentXzaSlide, setCurrentXzaSlide] = useState(0); // Extra-Curricular Carousel
+  /* --- STATE --- */
+  const [currentSlide, setCurrentSlide] = useState(0);       
+  const [currentXzaSlide, setCurrentXzaSlide] = useState(0); 
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  // MODAL STATES
-  const [selectedProject, setSelectedProject] = useState(null); // Lightbox
-  const [isContactOpen, setIsContactOpen] = useState(false);    // Contact Modal
-
-  // PAUSE STATES
+  const [selectedProject, setSelectedProject] = useState(null); 
+  const [isContactOpen, setIsContactOpen] = useState(false);    
   const [isPaused, setIsPaused] = useState(false);
   const [isXzaPaused, setIsXzaPaused] = useState(false);
-
-  // SWIPE GESTURE STATE
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
-  const minSwipeDistance = 50; // Required distance for a swipe to register
 
-  // SWIPE HANDLERS
+  /* --- HANDLERS --- */
+  const minSwipeDistance = 50;
+
   const onTouchStart = (e) => {
     setTouchEnd(null); 
     setTouchStart(e.targetTouches[0].clientX);
   };
+
   const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+
   const onTouchEnd = (nextFunc, prevFunc) => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) nextFunc();
-    if (isRightSwipe) prevFunc();
+    if (distance > minSwipeDistance) nextFunc();
+    if (distance < -minSwipeDistance) prevFunc();
   };
 
-  // 1. PROFESSIONAL CAROUSEL TIMER (With Pause Check)
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % DATA.professional.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? DATA.professional.length - 1 : prev - 1));
+  const nextXzaSlide = () => setCurrentXzaSlide((prev) => (prev + 1) % DATA.xza.slides.length);
+  const prevXzaSlide = () => setCurrentXzaSlide((prev) => (prev === 0 ? DATA.xza.slides.length - 1 : prev - 1));
+
+  /* --- EFFECTS --- */
   useEffect(() => {
     if (isPaused) return; 
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % DATA.professional.length);
-    }, 3000); 
+    const timer = setInterval(() => nextSlide(), 3000); 
     return () => clearInterval(timer);
   }, [currentSlide, isPaused]);
 
-  // 2. XZA CAROUSEL TIMER (With Pause Check)
   useEffect(() => {
     if (isXzaPaused) return; 
-    const timer = setInterval(() => {
-      setCurrentXzaSlide((prev) => (prev + 1) % DATA.xza.slides.length);
-    }, 3000); 
+    const timer = setInterval(() => nextXzaSlide(), 3000); 
     return () => clearInterval(timer);
   }, [currentXzaSlide, isXzaPaused]);
 
-  // 3. SCROLL DETECTION
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- NAVIGATION HANDLERS ---
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % DATA.professional.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? DATA.professional.length - 1 : prev - 1));
-
-  const nextXzaSlide = () => setCurrentXzaSlide((prev) => (prev + 1) % DATA.xza.slides.length);
-  const prevXzaSlide = () => setCurrentXzaSlide((prev) => (prev === 0 ? DATA.xza.slides.length - 1 : prev - 1));
+  /* --- RENDER HELPERS --- */
+  const getPositionClass = (index, current, length) => {
+    if (index === current) return "opacity-100 scale-100 z-30 translate-x-0 shadow-2xl pointer-events-auto";
+    if (index === (current - 1 + length) % length) return "opacity-40 scale-75 z-20 -translate-x-[160px] md:-translate-x-[280px] blur-[1px] pointer-events-none";
+    if (index === (current + 1) % length) return "opacity-40 scale-75 z-20 translate-x-[160px] md:translate-x-[280px] blur-[1px] pointer-events-none";
+    return "opacity-0 scale-50 z-10 translate-x-0 pointer-events-none";
+  };
 
   return (
     <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden pb-32">
       
-      {/* 1. FIXED HEADER */}
+      {/* --- HEADER --- */}
       <header 
         className={`fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b-4 border-stone-900 transition-all duration-500 ease-in-out
           ${isScrolled ? 'h-20 shadow-md' : 'h-[320px] md:h-[300px]'}`}
       >
         <div className="max-w-6xl mx-auto px-6 md:px-12 h-full flex items-center justify-between relative">
             
-            {/* LEFT SIDE: Empty Placeholder */}
             <div className="hidden md:block pointer-events-none"></div>
 
-            {/* CENTER/LEFT: THE NAME CONTAINER */}
             <div className={`absolute top-1/2 -translate-y-1/2 flex flex-col transition-all duration-500
                ${isScrolled 
                   ? 'left-6 md:left-1/2 md:-translate-x-1/2 md:items-center items-start pt-3' 
@@ -208,11 +188,10 @@ export default function Home() {
                <div className={`text-stone-500 font-medium tracking-widest uppercase mt-4 text-sm flex gap-2 md:gap-4 transition-all duration-300
                   ${isScrolled ? 'opacity-0 h-0 overflow-hidden mt-0' : 'opacity-100'}`}>
                  <span>{DATA.role}</span>
-                 <span className="">•</span>
+                 <span>•</span> 
                  <span>{DATA.location}</span>
                </div>
                
-               {/* INITIAL BUTTONS (Trigger Modal) */}
                <div className={`flex gap-4 mt-6 transition-all duration-300
                   ${isScrolled ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
                    <button 
@@ -224,7 +203,6 @@ export default function Home() {
                </div>
             </div>
 
-            {/* RIGHT SIDE: Contact Button (Trigger Modal) */}
             <div className={`transition-all duration-700 absolute right-6 md:right-12 top-1/2 -translate-y-1/2
                 ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
                <button 
@@ -241,12 +219,12 @@ export default function Home() {
 
       <main className="max-w-6xl mx-auto px-6 md:px-12">
         
-        {/* 2. COMPETENCIES */}
+        {/* --- COMPETENCIES --- */}
         <section className="py-12 md:py-16 border-b border-stone-300">
             <h3 className="font-serif text-4xl mb-10 text-center">Competencies</h3>
-            <div className="grid grid-cols-4 gap-y-6 gap-x-4 md:flex md:flex-nowrap md:justify-center md:items-end md:gap-16 w-full">
+            <div className="flex flex-wrap justify-center gap-y-6 gap-x-4 md:gap-16 w-full px-2 md:px-0">
               {DATA.tools.map((tool, index) => (
-                <div key={index} className="flex flex-col items-center justify-center group">
+                <div key={index} className="flex flex-col items-center justify-center group w-[21%] md:w-auto">
                    <img src={tool.url} alt={tool.name} className="w-10 h-10 md:w-14 md:h-14 object-contain mb-3 md:mb-4 opacity-80 group-hover:opacity-100 transition-opacity duration-300"/>
                    <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-stone-400 group-hover:text-stone-900 text-center transition-colors duration-300">
                       {tool.name}
@@ -256,14 +234,12 @@ export default function Home() {
             </div>
         </section>
 
-        {/* 3. PROFESSIONAL WORK */}
+        {/* --- PROFESSIONAL WORK --- */}
         <section className="py-16 border-b border-stone-300">
           <h3 className="font-serif text-4xl text-center text-stone-900">
             Professional Work
           </h3>
-
           <div className="w-24 h-px bg-stone-300 mx-auto my-8"></div>
-
           <div className="max-w-3xl mx-auto text-center mb-12">
               <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
                 {DATA.svar.title}
@@ -285,17 +261,7 @@ export default function Home() {
             onTouchEnd={() => onTouchEnd(nextSlide, prevSlide)}
           >
              {DATA.professional.map((project, index) => {
-               const length = DATA.professional.length;
-               const isCenter = index === currentSlide;
-               const isPrev = index === (currentSlide - 1 + length) % length;
-               const isNext = index === (currentSlide + 1) % length;
-               let positionClass = "";
-
-               if (isCenter) positionClass = "opacity-100 scale-100 z-30 translate-x-0 shadow-2xl pointer-events-auto";
-               else if (isPrev) positionClass = "opacity-40 scale-75 z-20 -translate-x-[160px] md:-translate-x-[280px] blur-[1px] pointer-events-none";
-               else if (isNext) positionClass = "opacity-40 scale-75 z-20 translate-x-[160px] md:translate-x-[280px] blur-[1px] pointer-events-none";
-               else positionClass = "opacity-0 scale-50 z-10 translate-x-0 pointer-events-none";
-
+               const positionClass = getPositionClass(index, currentSlide, DATA.professional.length);
                return (
                  <a key={index} href={project.link} target="_blank" rel="noopener noreferrer"
                     className={`absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-in-out ${positionClass}`}>
@@ -320,14 +286,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. EXTRA-CURRICULAR (XZA SECTION) */}
+        {/* --- EXTRA-CURRICULAR --- */}
         <section className="py-16 border-b border-stone-300">
           <h3 className="font-serif text-4xl text-center text-stone-900">
             Extra-Curricular
           </h3>
-
           <div className="w-24 h-px bg-stone-300 mx-auto my-8"></div>
-
           <div className="max-w-3xl mx-auto text-center mb-12">
               <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
                 {DATA.xza.title}
@@ -356,17 +320,7 @@ export default function Home() {
             onTouchEnd={() => onTouchEnd(nextXzaSlide, prevXzaSlide)}
           >
              {DATA.xza.slides.map((slide, index) => {
-               const length = DATA.xza.slides.length;
-               const isCenter = index === currentXzaSlide;
-               const isPrev = index === (currentXzaSlide - 1 + length) % length;
-               const isNext = index === (currentXzaSlide + 1) % length;
-               let positionClass = "";
-
-               if (isCenter) positionClass = "opacity-100 scale-100 z-30 translate-x-0 shadow-2xl pointer-events-auto";
-               else if (isPrev) positionClass = "opacity-40 scale-75 z-20 -translate-x-[160px] md:-translate-x-[280px] blur-[1px] pointer-events-none";
-               else if (isNext) positionClass = "opacity-40 scale-75 z-20 translate-x-[160px] md:translate-x-[280px] blur-[1px] pointer-events-none";
-               else positionClass = "opacity-0 scale-50 z-10 translate-x-0 pointer-events-none";
-
+               const positionClass = getPositionClass(index, currentXzaSlide, DATA.xza.slides.length);
                return (
                  <a key={index} href={slide.link} target="_blank" rel="noopener noreferrer"
                  className={`absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-in-out ${positionClass}`}>
@@ -390,7 +344,7 @@ export default function Home() {
              <button onClick={nextXzaSlide} className="absolute right-4 md:right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-stone-900 hover:text-white transition-colors z-40 shadow-md"><ChevronRight size={24} /></button>
           </div>
 
-          {/* LOGO REDESIGN & YOUTUBE */}
+          {/* LOGO & VIDEO */}
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20 px-6">
              <div className="flex justify-center md:justify-end">
                 <div className="w-64 h-64 md:w-80 md:h-80 bg-stone-100 border border-stone-200 p-8 flex items-center justify-center">
@@ -424,12 +378,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. PERSONAL PROJECTS */}
+        {/* --- PERSONAL PROJECTS --- */}
         <section className="py-16">
           <h3 className="font-serif text-4xl text-stone-900 text-center mb-12">
             Personal Projects
           </h3>
-          
           <div className="max-w-6xl mx-auto px-6">
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
               {DATA.sections.personal.map((project, i) => (
@@ -459,7 +412,7 @@ export default function Home() {
 
       </main>
 
-      {/* LIGHTBOX MODAL (Image Only) */}
+      {/* --- LIGHTBOX MODAL --- */}
       {selectedProject && (
         <div 
           className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4"
@@ -484,7 +437,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* CONTACT MODAL (CUSTOM ICONS) */}
+      {/* --- CONTACT MODAL --- */}
       {isContactOpen && (
         <div 
           className="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
@@ -504,21 +457,18 @@ export default function Home() {
               <h3 className="font-serif text-3xl text-stone-900 mb-10">Get in Touch</h3>
 
               <div className="grid grid-cols-3 gap-6 w-full">
-                  {/* MAIL */}
                   <a href={`mailto:${DATA.email}`} target="_blank" rel="noopener noreferrer" 
                      className="flex flex-col items-center gap-3 group">
                      <img src="/icons/mail.svg" alt="Email" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>
                      <span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">Email</span>
                   </a>
 
-                  {/* LINKEDIN */}
                   <a href={DATA.contact.linkedin} target="_blank" rel="noopener noreferrer"
                      className="flex flex-col items-center gap-3 group">
                      <img src="/icons/lin.png" alt="LinkedIn" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>
                      <span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">LinkedIn</span>
                   </a>
 
-                  {/* WHATSAPP */}
                   <a href={DATA.contact.whatsapp} target="_blank" rel="noopener noreferrer"
                      className="flex flex-col items-center gap-3 group">
                      <img src="/icons/wa.svg" alt="WhatsApp" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/>

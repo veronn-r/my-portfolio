@@ -19,10 +19,10 @@ const DATA = {
     { name: "Photoshop", url: "/icons/ps.svg" },
     { name: "Illustrator", url: "/icons/ai.svg" },
     { name: "InDesign", url: "/icons/id.svg" },
+    { name: "Affinity by Canva", url: "/icons/af.svg" },
     { name: "After Effects", url: "/icons/ae.svg" },
     { name: "Premiere Pro", url: "/icons/pr.svg" },
     { name: "DaVinci Resolve", url: "/icons/dr.svg" },
-    { name: "Affinity by Canva", url: "/icons/af.svg" },
   ],
 
   svar: {
@@ -80,6 +80,15 @@ const DATA = {
       id: "g5DKiuWa-1M", 
       desc: "For IMPRINT 2022, I created an animated short trailer to announce the magazine’s call for articles."
     }
+  },
+
+  // NEW: PACKAGING PROJECT DATA
+  packaging: {
+    title: "Midnight Cocoa - Premium Chocolate",
+    role: "Packaging Design & Print Production",
+    // UPDATED DESCRIPTION: Added "fictional brand's"
+    desc: "A premium packaging concept for a fictional brand's 70% Dark Chocolate Sea Salt bar. Designed for the high-end artisanal market using matte recycled cardboard specifications.",
+    image: "/work/midnight-cocoa.png" 
   },
 
   sections: {
@@ -383,6 +392,29 @@ export default function Home() {
           <h3 className="font-serif text-4xl text-stone-900 text-center mb-12">
             Personal Projects
           </h3>
+          
+          {/* NEW: MIDNIGHT COCOA FEATURED PROJECT */}
+          <div className="max-w-5xl mx-auto mb-20 px-6">
+             <div className="text-center mb-8">
+                <h4 className="font-sans font-bold text-xl md:text-2xl text-stone-900 mb-2">
+                  {DATA.packaging.title}
+                </h4>
+                <p className="text-stone-500 text-xs md:text-sm tracking-widest uppercase mb-3">
+                  {DATA.packaging.role}
+                </p>
+                <p className="text-stone-600 leading-relaxed max-w-xl mx-auto">
+                  {DATA.packaging.desc}
+                </p>
+             </div>
+             <div className="w-full bg-stone-100 border border-stone-200">
+                <img 
+                  src={DATA.packaging.image} 
+                  alt={DATA.packaging.title} 
+                  className="w-full h-auto object-cover"
+                />
+             </div>
+          </div>
+
           <div className="max-w-6xl mx-auto px-6">
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
               {DATA.sections.personal.map((project, i) => (

@@ -2,6 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ExternalLink, X, Maximize2 } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+// Lazy load the 3D scene
+const CocoaScene = dynamic(() => import('./components/CocoaScene'), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] md:h-[500px] bg-stone-100 flex items-center justify-center text-stone-400 text-xs uppercase tracking-widest">
+      Loading 3D Model...
+    </div>
+  )
+});
 
 /* --- DATA & CONFIGURATION --- */
 const DATA = {
@@ -27,33 +38,33 @@ const DATA = {
 
   svar: {
     title: "SVAR Events & Media Network",
-    role: "Designer - Magazine Design and Pre-Press Production; Digital Collatoral Production",
+    role: "Designer - Magazine Design & Production",
     desc: "Designed core article layouts and systems; oversaw final colour proofing and print production."
   },
   professional: [
     {
       title: "SVAR - The Voice of Jewellers (August)",
-      image: "/work/aug-mag.jpg", 
+      image: "/work/aug-mag.webp", 
       link: "https://svarmedia.com/magazine/#aug-2025-mgazine/1/" 
     },
     {
       title: "SVAR - The Voice of Jewellers (September)",
-      image: "/work/sep-mag.jpg", 
+      image: "/work/sep-mag.webp", 
       link: "https://svarmedia.com/magazine/#vol-5-issue-9/1/" 
     },
     {
       title: "SVAR - The Voice of Jewellers (October)",
-      image: "/work/oct-mag.jpg", 
+      image: "/work/oct-mag.webp", 
       link: "https://svarmedia.com/magazine/#vol-5-issue-10/1/" 
     },
     {
       title: "SVAR - The Voice of Jewellers (November)",
-      image: "/work/nov-mag.jpg", 
+      image: "/work/nov-mag.webp", 
       link: "https://svarmedia.com/magazine/#vol-5-issue-11/1/" 
     },
     {
       title: "SVAR - The Voice of Jewellers (December)",
-      image: "/work/dec-mag.jpg", 
+      image: "/work/dec-mag.webp", 
       link: "https://svarmedia.com/magazine/#vol-5-issue-12/1/" 
     },
   ],
@@ -67,9 +78,9 @@ const DATA = {
     ],
     desc: "I was responsible for the timely production, management and release of the Annual Departmental Magazine IMPRINT.",
     slides: [
-      { title: "IMPRINT Cover 2021", image: "/work/IMPRINT-21.jpg", link: "https://heyzine.com/flip-book/0a3c983ebc.html#page/1" }, 
-      { title: "IMPRINT Cover 2022", image: "/work/IMPRINT-22.jpg", link: "https://heyzine.com/flip-book/b9012c8d61.html#page/1" }, 
-      { title: "IMPRINT Cover 2023", image: "/work/IMPRINT-23.jpg", link: "https://heyzine.com/flip-book/b24f59b965.html#page/1" }, 
+      { title: "IMPRINT Cover 2021", image: "/work/IMPRINT-21.webp", link: "https://heyzine.com/flip-book/0a3c983ebc.html#page/1" }, 
+      { title: "IMPRINT Cover 2022", image: "/work/IMPRINT-22.webp", link: "https://heyzine.com/flip-book/b9012c8d61.html#page/1" }, 
+      { title: "IMPRINT Cover 2023", image: "/work/IMPRINT-23.webp", link: "https://heyzine.com/flip-book/b24f59b965.html#page/1" }, 
     ],
     logo: {
       title: "XZA Logo Design",
@@ -82,23 +93,21 @@ const DATA = {
     }
   },
 
-  // NEW: PACKAGING PROJECT DATA
   packaging: {
     title: "Midnight Cocoa - Premium Chocolate",
     role: "Packaging Design & Print Production",
-    // UPDATED DESCRIPTION: Added "fictional brand's"
     desc: "A premium packaging concept for a fictional brand's 70% Dark Chocolate Sea Salt bar. Designed for the high-end artisanal market using matte recycled cardboard specifications.",
-    image: "/work/midnight-cocoa.png" 
+    image: "/work/midnight-cocoa.webp" 
   },
 
   sections: {
     personal: [
-      { image: "/work/Chrysilla-volupe.jpg" },
-      { image: "/work/maow-ellise.jpg" }, 
-      { image: "/work/lotf.png" },
-      { image: "/work/fish-out-of-water.png" }, 
-      { image: "/work/humour.png" }, 
-      { image: "/work/headsup.jpg" }, 
+      { image: "/work/Chrysilla-volupe.webp" },
+      { image: "/work/maow-ellise.webp" }, 
+      { image: "/work/lotf.webp" },
+      { image: "/work/fish-out-of-water.webp" }, 
+      { image: "/work/humour.webp" }, 
+      { image: "/work/headsup.webp" }, 
     ]
   }
 };
@@ -164,8 +173,17 @@ export default function Home() {
     return "opacity-0 scale-50 z-10 translate-x-0 pointer-events-none";
   };
 
+  /* --- SHARED STYLES --- */
+  const styles = {
+    sectionTitle: "font-serif text-4xl mb-10 text-center text-stone-900",
+    projectTitle: "font-sans font-bold text-xl uppercase text-stone-900 mb-2",
+    metaText: "text-stone-500 text-xs md:text-sm tracking-widest uppercase mb-3",
+    bodyText: "text-stone-600 leading-relaxed max-w-xl mx-auto",
+    button: "text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-4 py-3 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
+  };
+
   return (
-    <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden pb-32">
+    <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden pb-32 text-stone-900">
       
       {/* --- HEADER --- */}
       <header 
@@ -203,10 +221,7 @@ export default function Home() {
                
                <div className={`flex gap-4 mt-6 transition-all duration-300
                   ${isScrolled ? 'opacity-0 pointer-events-none absolute' : 'opacity-100'}`}>
-                   <button 
-                     onClick={() => setIsContactOpen(true)}
-                     className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-4 py-3 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
-                   >
+                   <button onClick={() => setIsContactOpen(true)} className={styles.button}>
                      Contact Me
                    </button>
                </div>
@@ -214,10 +229,7 @@ export default function Home() {
 
             <div className={`transition-all duration-700 absolute right-6 md:right-12 top-1/2 -translate-y-1/2
                 ${isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 pointer-events-none'}`}>
-               <button 
-                 onClick={() => setIsContactOpen(true)}
-                 className="text-xs font-bold tracking-widest uppercase bg-stone-900 text-stone-50 border border-stone-900 px-3 py-2 inline-block hover:bg-stone-700 hover:border-stone-700 transition-colors"
-               >
+               <button onClick={() => setIsContactOpen(true)} className={`${styles.button} px-3 py-2`}>
                  Contact Me
                </button>
             </div>
@@ -230,7 +242,7 @@ export default function Home() {
         
         {/* --- COMPETENCIES --- */}
         <section className="py-12 md:py-16 border-b border-stone-300">
-            <h3 className="font-serif text-4xl mb-10 text-center">Competencies</h3>
+            <h3 className={styles.sectionTitle}>Competencies</h3>
             <div className="flex flex-wrap justify-center gap-y-6 gap-x-4 md:gap-16 w-full px-2 md:px-0">
               {DATA.tools.map((tool, index) => (
                 <div key={index} className="flex flex-col items-center justify-center group w-[21%] md:w-auto">
@@ -245,20 +257,15 @@ export default function Home() {
 
         {/* --- PROFESSIONAL WORK --- */}
         <section className="py-16 border-b border-stone-300">
-          <h3 className="font-serif text-4xl text-center text-stone-900">
-            Professional Work
-          </h3>
+          <h3 className={styles.sectionTitle}>Professional Work</h3>
           <div className="w-24 h-px bg-stone-300 mx-auto my-8"></div>
+          
           <div className="max-w-3xl mx-auto text-center mb-12">
-              <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
-                {DATA.svar.title}
-              </h4>
-              <p className="text-stone-400 text-xs md:text-sm mb-2 leading-relaxed px-4">
-                June 2025 - Present
-              </p>
-              <p className="text-stone-500 text-xs md:text-sm mb-2 leading-relaxed px-4">
+              <h4 className={styles.projectTitle}>{DATA.svar.title}</h4>
+              <p className={styles.metaText}>June 2025 - Present</p>
+              <div className={styles.bodyText}>
                 {DATA.svar.role}
-              </p>
+              </div>
           </div>
 
           <div 
@@ -297,27 +304,18 @@ export default function Home() {
 
         {/* --- EXTRA-CURRICULAR --- */}
         <section className="py-16 border-b border-stone-300">
-          <h3 className="font-serif text-4xl text-center text-stone-900">
-            Extra-Curricular
-          </h3>
+          <h3 className={styles.sectionTitle}>Extra-Curricular</h3>
           <div className="w-24 h-px bg-stone-300 mx-auto my-8"></div>
+          
           <div className="max-w-3xl mx-auto text-center mb-12">
-              <h4 className="font-sans font-bold text-1xl md:text-1xl uppercase text-stone-900 mb-1">
-                {DATA.xza.title}
-              </h4>
-              <p className="text-stone-400 text-xs md:text-sm mb-2 leading-relaxed px-4">
-                {DATA.xza.year}
-              </p>
-              <div className="text-stone-500 text-xs md:text-sm mb-2 leading-relaxed px-4 max-w-lg mx-auto">
+              <h4 className={styles.projectTitle}>{DATA.xza.title}</h4>
+              <p className={styles.metaText}>{DATA.xza.year}</p>
+              <div className={`${styles.metaText} normal-case tracking-normal max-w-lg mx-auto text-stone-500`}>
                 {DATA.xza.role.map((line, i) => (
-                  <span key={i} className="block">
-                    {line}
-                  </span>
+                  <span key={i} className="block">{line}</span>
                 ))}
               </div>
-              <p className="text-stone-600 text-sm md:text-base leading-relaxed mt-4 px-4 max-w-xl mx-auto">
-                {DATA.xza.desc}
-              </p>
+              <p className={`${styles.bodyText} mt-4`}>{DATA.xza.desc}</p>
           </div>
 
           <div 
@@ -361,12 +359,8 @@ export default function Home() {
                 </div>
              </div>
              <div className="text-center md:text-left">
-                <h4 className="font-sans font-bold text-1xl md:text-1xl text-stone-900 mb-4">
-                  {DATA.xza.logo.title}
-                </h4>
-                <p className="text-stone-600 leading-relaxed max-w-md mx-auto md:mx-0">
-                  {DATA.xza.logo.desc}
-                </p>
+                <h4 className={styles.projectTitle}>{DATA.xza.logo.title}</h4>
+                <p className={`${styles.bodyText} md:mx-0`}>{DATA.xza.logo.desc}</p>
              </div>
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -381,40 +375,34 @@ export default function Home() {
                  allowFullScreen
                ></iframe>
              </div>
-             <p className="text-stone-600 text-sm leading-relaxed">
-               {DATA.xza.video.desc}
-             </p>
+             <p className={`${styles.bodyText} text-sm`}>{DATA.xza.video.desc}</p>
           </div>
         </section>
 
         {/* --- PERSONAL PROJECTS --- */}
         <section className="py-16">
-          <h3 className="font-serif text-4xl text-stone-900 text-center mb-12">
-            Personal Projects
-          </h3>
+          <h3 className={styles.sectionTitle}>Personal Projects</h3>
           
-          {/* NEW: MIDNIGHT COCOA FEATURED PROJECT */}
-          <div className="max-w-5xl mx-auto mb-20 px-6">
+          {/* SEPARATOR BEFORE */}
+          <div className="w-24 h-px bg-stone-300 mx-auto my-12"></div>
+
+          {/* PACKAGING FEATURE */}
+          <div className="max-w-5xl mx-auto px-6">
              <div className="text-center mb-8">
-                <h4 className="font-sans font-bold text-xl md:text-2xl text-stone-900 mb-2">
-                  {DATA.packaging.title}
-                </h4>
-                <p className="text-stone-500 text-xs md:text-sm tracking-widest uppercase mb-3">
-                  {DATA.packaging.role}
-                </p>
-                <p className="text-stone-600 leading-relaxed max-w-xl mx-auto">
-                  {DATA.packaging.desc}
-                </p>
+                <h4 className={styles.projectTitle}>{DATA.packaging.title}</h4>
+                <p className={styles.metaText}>{DATA.packaging.role}</p>
+                <p className={styles.bodyText}>{DATA.packaging.desc}</p>
              </div>
-             <div className="w-full bg-stone-100 border border-stone-200">
-                <img 
-                  src={DATA.packaging.image} 
-                  alt={DATA.packaging.title} 
-                  className="w-full h-auto object-cover"
-                />
+             <div className="w-full">
+                {/* 3D Viewer Component */}
+                <CocoaScene />
              </div>
           </div>
 
+          {/* SEPARATOR AFTER */}
+          <div className="w-24 h-px bg-stone-300 mx-auto my-12"></div>
+
+          {/* GRID */}
           <div className="max-w-6xl mx-auto px-6">
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
               {DATA.sections.personal.map((project, i) => (

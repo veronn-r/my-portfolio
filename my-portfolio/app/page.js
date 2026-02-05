@@ -1,7 +1,7 @@
 'use client'; 
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, ExternalLink, X, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, X, Maximize2, ArrowUp } from "lucide-react";
 import dynamic from 'next/dynamic';
 
 // 1. DYNAMIC IMPORTS
@@ -12,7 +12,7 @@ const CocoaScene = dynamic(() => import('./components/CocoaScene'), {
 
 const ArticleFlipbook = dynamic(() => import('./components/ArticleFlipbook'), {
   ssr: false,
-  loading: () => <div className="h-[550px] bg-stone-50 flex items-center justify-center text-xs tracking-widest text-stone-400">LOADING FLIPBOOK...</div>
+  loading: () => <div className="h-[550px] flex items-center justify-center text-xs tracking-widest text-stone-400">LOADING FLIPBOOK...</div>
 });
 
 /* --- DATA & CONFIGURATION --- */
@@ -40,30 +40,29 @@ const DATA = {
   svar: {
     title: "SVAR Events & Media Network",
     role: "Designer - Magazine Design & Production",
-    desc: "Instrumental in the pre-press and publishing of 5+ monthly issues (and counting). I manage the end-to-end design lifecycle, from conceptualizing core article layouts to overseeing final colour proofing and coordinating strictly with print vendors."
+    desc: "Instrumental in the pre-press and publishing of 6 monthly issues (and counting). I manage the end-to-end design lifecycle, from conceptualizing core article layouts to overseeing final colour proofing and coordinating strictly with print vendors."
   },
   
-  // NEW: BEST ARTICLES SHOWCASE DATA
-  // Replace these with your actual article image paths
   showcase: {
     title: "Editorial Design Showcase",
     desc: "A curated selection of my most effective article layouts and typographic systems designed during my tenure at SVAR.",
     pages: [
-      "/work/articles/page1.webp", // Front Cover or Intro
-      "/work/articles/page2.webp", // Spread Left
-      "/work/articles/page3.webp", // Spread Right
+      "/work/articles/page1.webp",
+      "/work/articles/page2.webp",
+      "/work/articles/page3.webp",
       "/work/articles/page4.webp", 
       "/work/articles/page5.webp",
-      "/work/articles/page6.webp", // Back Cover or End
+      "/work/articles/page6.webp", 
     ]
   },
 
   professional: [
-    { title: "SVAR - The Voice of Jewellers (August)", image: "/work/aug-mag.webp", link: "https://svarmedia.com/magazine/#aug-2025-mgazine/1/" },
-    { title: "SVAR - The Voice of Jewellers (September)", image: "/work/sep-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-9/1/" },
-    { title: "SVAR - The Voice of Jewellers (October)", image: "/work/oct-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-10/1/" },
-    { title: "SVAR - The Voice of Jewellers (November)", image: "/work/nov-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-11/1/" },
-    { title: "SVAR - The Voice of Jewellers (December)", image: "/work/dec-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-12/1/" },
+    { title: "SVAR - The Voice of Jewellers (August 2025)", image: "/work/aug-mag.webp", link: "https://svarmedia.com/magazine/#aug-2025-mgazine/1/" },
+    { title: "SVAR - The Voice of Jewellers (September 2025)", image: "/work/sep-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-9/1/" },
+    { title: "SVAR - The Voice of Jewellers (October 2025)", image: "/work/oct-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-10/1/" },
+    { title: "SVAR - The Voice of Jewellers (November 2025)", image: "/work/nov-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-11/1/" },
+    { title: "SVAR - The Voice of Jewellers (December 2025)", image: "/work/dec-mag.webp", link: "https://svarmedia.com/magazine/#vol-5-issue-12/1/" },
+    { title: "SVAR - The Voice of Jewellers (January 2026)", image: "/work/jan-mag.webp", link: "" },
   ],
 
   xza: {
@@ -100,6 +99,7 @@ const DATA = {
 };
 
 export default function Home() {
+  /* --- STATE --- */
   const [currentSlide, setCurrentSlide] = useState(0);       
   const [currentXzaSlide, setCurrentXzaSlide] = useState(0); 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -126,6 +126,11 @@ export default function Home() {
   const nextXzaSlide = () => setCurrentXzaSlide((prev) => (prev + 1) % DATA.xza.slides.length);
   const prevXzaSlide = () => setCurrentXzaSlide((prev) => (prev === 0 ? DATA.xza.slides.length - 1 : prev - 1));
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /* --- EFFECTS --- */
   useEffect(() => { if (isPaused) return; const timer = setInterval(() => nextSlide(), 3000); return () => clearInterval(timer); }, [currentSlide, isPaused]);
   useEffect(() => { if (isXzaPaused) return; const timer = setInterval(() => nextXzaSlide(), 3000); return () => clearInterval(timer); }, [currentXzaSlide, isXzaPaused]);
   useEffect(() => { const handleScroll = () => setIsScrolled(window.scrollY > 50); window.addEventListener("scroll", handleScroll); return () => window.removeEventListener("scroll", handleScroll); }, []);
@@ -146,8 +151,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden pb-32 text-stone-900">
+    <div className="min-h-screen font-sans selection:bg-stone-200 overflow-x-hidden text-stone-900">
       
+      {/* --- HEADER --- */}
       <header className={`fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b-4 border-stone-900 transition-all duration-500 ease-in-out ${isScrolled ? 'h-20 shadow-md' : 'h-[320px] md:h-[300px]'}`}>
         <div className="max-w-6xl mx-auto px-6 md:px-12 h-full flex items-center justify-between relative">
             <div className="hidden md:block pointer-events-none"></div>
@@ -217,7 +223,7 @@ export default function Home() {
              <button onClick={nextSlide} className="absolute right-4 md:right-0 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-stone-900 hover:text-white transition-colors z-40 shadow-md"><ChevronRight size={24} /></button>
           </div>
 
-          {/* NEW: FLIPBOOK SECTION
+          {/* FLIPBOOK SECTION
           <div className="max-w-5xl mx-auto mt-24">
              <div className="text-center mb-8">
                 <h4 className={styles.projectTitle}>{DATA.showcase.title}</h4>
@@ -307,11 +313,32 @@ export default function Home() {
             </div>
           </div>
         </section>
+        
+        {/* --- SIMPLE FOOTER --- */}
+        <div className="py-32 flex flex-col items-center justify-center min-h-[200px]">
+           <div className="w-24 h-px bg-stone-300 mb-12"></div>
+           
+           <div className="flex flex-col items-center gap-8">
+             <p className="font-serif italic text-2xl text-stone-500 text-center px-4">
+                That's it folks! ...for now
+             </p>
+
+             <button 
+                onClick={scrollToTop}
+                className="flex flex-col items-center gap-2 group transition-all duration-300"
+             >
+                <div className="w-12 h-12 rounded-full bg-stone-900 text-stone-50 flex items-center justify-center group-hover:bg-stone-700 transition-colors shadow-lg">
+                   <ArrowUp size={24} />
+                </div>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-stone-400 group-hover:text-stone-900">Back to Top</span>
+             </button>
+           </div>
+        </div>
 
       </main>
 
+      {/* MODALS */}
       {selectedProject && (<div className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center p-4" onClick={() => setSelectedProject(null)}><button className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors" onClick={() => setSelectedProject(null)}><X size={32} /></button><div className="max-w-5xl max-h-screen w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}><img src={selectedProject.image} alt="Full Preview" className="max-h-[90vh] w-auto object-contain shadow-2xl"/></div></div>)}
-      
       {isContactOpen && (<div className="fixed inset-0 z-[70] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setIsContactOpen(false)}><div className="bg-white p-8 md:p-12 max-w-lg w-full relative shadow-2xl flex flex-col items-center text-center animate-in fade-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}><button className="absolute top-4 right-4 text-stone-400 hover:text-stone-900 transition-colors" onClick={() => setIsContactOpen(false)}><X size={24} /></button><h3 className="font-serif text-3xl text-stone-900 mb-10">Get in Touch</h3><div className="grid grid-cols-3 gap-6 w-full"><a href={`mailto:${DATA.email}`} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group"><img src="/icons/mail.svg" alt="Email" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/><span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">Email</span></a><a href={DATA.contact.linkedin} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group"><img src="/icons/lin.png" alt="LinkedIn" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/><span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">LinkedIn</span></a><a href={DATA.contact.whatsapp} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group"><img src="/icons/wa.svg" alt="WhatsApp" className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"/><span className="text-xs font-bold uppercase tracking-widest text-stone-500 group-hover:text-stone-900 transition-colors">WhatsApp</span></a></div></div></div>)}
 
     </div>
